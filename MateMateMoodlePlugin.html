@@ -1,0 +1,335 @@
+<div style="border:2px solid RGB(255, 193, 7); border-radius:15px; padding:10px" width="100%">
+
+    <div class="dropdown">
+
+
+        <a href="#" tabindex="0" class=" dropdown-toggle icon-no-margin" aria-label="Aktionsmenü" data-toggle="dropdown"
+            role="menuitem" aria-haspopup="true" aria-expanded="false" aria-controls="action-menu-0-menu">
+
+
+            <i class="icon fa fa-cog fa-fw " title="Aktionsmenü" role="img" aria-label="Aktionsmenü"></i>
+        </a>
+        <div class="dropdown-menu menu dropdown-menu-right" data-rel="menu-content"
+            aria-labelledby="action-menu-toggle-0" role="menu" data-constraint=".block-region"
+            style="will-change: transform;">
+
+            <a title="Log In MateDB" class="dropdown-item editing_edit menu-action" id="Matebutton" href="#">
+                <i class="icon fa fa-cog fa-fw " title="Log In MateDB" role="img" aria-label="Log In MateDB"></i>
+                <span class="menu-action-text">Log In MateDB</span>
+            </a>
+
+        </div>
+    </div>
+    <center><img src=" https://cdn.discordapp.com/attachments/623265449848602626/1088462164475523212/matemate.png"
+            width="50%">
+
+    </center>
+    <div id="tablediv" style="display: none; height: 200px; width: 100%; overflow-y: scroll;">
+        <table id="matetable" style="width:100%;">
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+<div id="moodlescript">
+</div>
+
+<!-- Trigger/Open The Modal -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jose/4.13.1/index.js"
+    integrity="sha512-vJNqlg9d6/H3fI3iJv3gwXzQE8CJbNowLoFkXwxO+vgxsXvwsgSC6O+b6A/UGAbBKTI1ATtJbLbRzRWLXIzoIg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    let a = document.getElementById("moodlescript");
+    var style = document.createElement("style");
+    style.innerHTML = "@/* The Modal (background) */\n.modal {\n  display: none; /* Hidden by default */\n  position: fixed; /* Stay in place */\n  z-index: 1000000; /* Sit on top */\n  left: 0;\n  top: 0;\n  width: 100%; /* Full width */\n  height: 100%; /* Full height */\n  overflow: auto; /* Enable scroll if needed */\n  background-color: rgb(0,0,0); /* Fallback color */\n  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */\n}\n\n/* Modal Content/Box */\n.modal-content {\n  background-color: #fefefe;\n  margin: 15% auto; /* 15% from the top and centered */\n  padding: 20px;\n  border: 1px solid #888;\n  width: 30%; /* Could be more or less, depending on screen size */\n}\n\n/* The Close Button */\n.close {\n  color: #aaa;\n  float: right;\n  font-size: 28px;\n  font-weight: bold;\n}\n\n.close:hover,\n.close:focus {\n  color: black;\n  text-decoration: none;\n  cursor: pointer;\n} ";
+    a.appendChild(style);
+
+    // Get the button that opens the modal
+    var btn = document.getElementById("Matebutton");
+
+    document.body.insertAdjacentHTML("afterbegin", '<div id = "myModal" class = "modal"><div class = "modal-content" ><span class = "close" > × </span> <center><h2> Mate Login </h2></center> <form> <label for="mate_username"> username: </label><br> <input type="text" id="mate_username" name="mate_username"><br> <label for="mate_pw">password:</label><br> <input type="password" id="mate_pw" name="mate_pw"><br> </form>  <button class="btn btn-primary" id="mate_button">Log In</button></div></div>');
+
+    // Get the modal
+    var modal = document.getElementById("myModal");
+    var mate_username = document.getElementById("mate_username");
+    var mate_pw = document.getElementById("mate_pw");
+    var mate_btn = document.getElementById("mate_button");
+    var mate_table = document.getElementById("matetable");
+    var tablediv = document.getElementById("tablediv");
+    var transaction_offset = 0;
+    var endCursor = 10000;
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+    $(document).ready(function () {
+        var auth_cookie = getCookie('mate_auth');
+        if (auth_cookie === undefined) {
+            // I have no cookie
+            // do nothing
+        } else {
+            // validate auth token
+            if (!isValid(auth_cookie)) {
+                document.cookie = "mate_auth=" + refreshToken(getCookie("mate_user"), getCookie("mate_pw"));
+            }
+
+            endCursor = getEndCursor(auth_cookie);
+            getData(auth_cookie);
+            tablediv.style.display = "block";
+        }
+
+    });
+
+    // When the user clicks on the button, open the modal
+    btn.onclick = function () {
+        var auth_cookie = getCookie('mate_auth');
+        if (auth_cookie === undefined) {
+            // I have no cookie
+            modal.style.display = "block";
+        } else {
+            // validate auth token
+            if (!isValid(auth_cookie)) {
+                document.cookie = "mate_auth=" + refreshToken(getCookie("mate_user"), getCookie("mate_pw"));
+            }
+
+            endCursor = getEndCursor(auth_cookie);
+            getData(auth_cookie);
+            tablediv.style.display = "block";
+
+        }
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function () {
+        modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    mate_btn.onclick = function () {
+        var expirationDate = new Date();
+        expirationDate.setDate(expirationDate.getDate() + 30);
+
+        // Sign In
+        $.ajax({
+            url: 'https://matekasse.gero.dev/graphql',
+            //dataType: 'application/json',
+            method: 'POST',
+            contentType: 'application/json',
+            data: '{"query":"mutation { signIn(username: \\"' + mate_username.value + '\\", password: \\"' + mate_pw.value + '\\") }"}',
+            success: function ajaxSuccess(data) {
+                // data from the nginx
+
+                if (data.data != null) {
+                    document.cookie = "mate_user=" + mate_username.value + "; expires=" + expirationDate.toUTCString();
+                    document.cookie = "mate_pw=" + mate_pw.value + "; expires=" + expirationDate.toUTCString();
+                    document.cookie = "mate_auth=" + data.data.signIn;
+                    endCursor = getEndCursor(data.data.signIn);
+                    getData(data.data.signIn);
+                    modal.style.display = "none";
+                    tablediv.style.display = "block";
+                } else {
+                    mate_username.value = "";
+                    mate_pw.value = "";
+                }
+                // store my auth in a cookie
+            }, error: function ajaxFailed(jqXHR) {
+                // do something on failure, like
+                modal.style.display = "block";
+            }
+        });
+    }
+
+    function getCookie(cookiename) {
+        /* a function to find a cookie based on its name */
+
+        var r = document.cookie.match('\\b' + cookiename + "=([^;]*)\\b");
+        // document.cookie returns all cookies for this url
+        return r ? r[1] : undefined;
+        // return the regex capture if it has content, otherwise return undefined
+    }
+
+    function getEndCursor(auth) {
+        var cursor = 0;
+        $.ajax({
+            url: 'https://matekasse.gero.dev/graphql',
+            method: 'POST',
+            async: false,
+            contentType: 'application/json',
+            headers: { "Authorization": auth },
+            data: '{"query":"query { transactionsPaginated(first: 0, after: 0) { pageInfo{ endCursor } } }"}',
+            success: function ajaxSuccess(data) {
+                cursor = data.data.transactionsPaginated.pageInfo.endCursor;
+            }
+        });
+        return cursor;
+    }
+
+    function getData(auth_basic) {
+        var after = endCursor - transaction_offset + 1;
+        var transactions = [];
+        var offerings = [];
+        var tablePairs = [];
+
+        // Get transactions
+        $.ajax({
+            url: 'https://matekasse.gero.dev/graphql',
+            //dataType: 'application/json',
+            async: false,
+            method: 'POST',
+            contentType: 'application/json',
+            headers: {
+                "Authorization": auth_basic
+            },
+            data: '{"query":"query { transactionsPaginated(first: 10, after: ' + after + ') { edges { node { admin {username} offeringId payer { username } pricePaidCents timestamp deleted} } } }"}',
+            success: function ajaxSuccess(data) {
+                // data from the nginx
+                transaction_offset += 10;
+                transactions = data.data.transactionsPaginated.edges;
+                // store my auth in a cookie
+            },
+            error: function ajaxFailed(jqXHR) {
+                // do something on failure, like
+                modal.style.display = "block";
+            }
+        });
+
+        // Get offerings
+        $.ajax({
+            url: 'https://matekasse.gero.dev/graphql',
+            //dataType: 'application/json',
+            async: false,
+            method: 'POST',
+            contentType: 'application/json',
+            headers: {
+                "Authorization": auth_basic
+            },
+            data: '{"query":"query { offerings { name readableName imageUrl } }"}',
+            success: function ajaxSuccess(data) {
+                // data from the nginx
+                offerings = data.data.offerings;
+                // store my auth in a cookie
+            },
+            error: function ajaxFailed(jqXHR) {
+                // do something on failure, like
+                modal.style.display = "block";
+            }
+        });
+
+        // Assign imageUrls and readable names to transactions
+        for (let i = 0; i < transactions.length; i++) {
+            for (let j = 0; j < offerings.length; j++) {
+                let element = {};
+                if (!transactions[i].node.deleted && offerings[j].name == transactions[i].node.offeringId) {
+                    element.readableName = offerings[j].readableName;
+                    element.imageUrl = offerings[j].imageUrl;
+                    element.pricePaidCents = transactions[i].node.pricePaidCents;
+                    element.timestamp = transactions[i].node.timestamp;
+
+                    tablePairs.push(element);
+                    break;
+                }
+            }
+
+        }
+
+        appendTable(tablePairs);
+    }
+
+    tablediv.addEventListener("scroll", () => {
+        if (Math.abs(tablediv.scrollHeight - tablediv.clientHeight - tablediv.scrollTop) < 1) {
+            getData(getCookie('mate_auth'));
+        }
+    },
+        {
+            passive: true
+        });
+
+    function appendTable(elements) {
+        var today = new Date().setHours(0, 0, 0, 0);
+        var todayString = "Today"; // TODO: localize somehow
+
+        for (let i = 0; i < elements.length; i++) {
+            var timestamp = new Date(Date.parse(elements[i].timestamp));
+            var lastTimestamp = new Date("1995-12-17T03:24:00");
+
+            if (i != 0) {
+                lastTimestamp = new Date(Date.parse(elements[i - 1].timestamp));
+            }
+
+            if (i == 0 && timestamp.setHours(0, 0, 0, 0) == today) {
+                matetable.insertRow(-1).insertCell(0).innerHTML = '<p style="color: grey; font-weight: bolder; font-family: Noto Sans;">' + todayString + '</p>';
+            } else {
+                if (timestamp.setHours(0, 0, 0, 0) != lastTimestamp.setHours(0, 0, 0, 0)) {
+                    var sixdaysago = new Date();
+                    sixdaysago.setDate(sixdaysago.getDate() - 6);
+                    if (timestamp.setHours(0, 0, 0, 0) > sixdaysago.setHours(0, 0, 0, 0)) {
+                        matetable.insertRow(-1).insertCell(0).innerHTML = '<p style="color: grey; font-weight: bolder; font-family: Noto Sans;">' + timestamp.toLocaleString(window.navigator.language, { weekday: "long" }) + '</p>';
+                    } else {
+                        matetable.insertRow(-1).insertCell(0).innerHTML = '<p style="color: grey; font-weight: bolder; font-family: Noto Sans;">' + timestamp.toLocaleDateString() + '</p>';
+                    }
+                }
+            }
+
+            let row = matetable.insertRow(-1);
+            if (i % 2 == 0) {
+                row.style = "background-color:  #f2f2f2; ";
+            }
+            let cell = row.insertCell(0);
+            cell.innerHTML = '<img src="' + elements[i].imageUrl + '" width="50px" title="' + elements[i].readableName + '">';
+            cell.style = "padding: 5px; ";
+            row.insertCell(1).innerHTML = (elements[i].pricePaidCents / 100).toLocaleString("de-DE", { style: "currency", currency: "EUR" });
+        }
+    }
+
+    function isValid(token) {
+        try {
+            const { exp } = parseJwt(token).exp;
+            if (Date.now() >= exp * 1000) {
+                return false;
+            }
+        } catch (err) {
+            return false;
+        }
+        return true;
+    }
+
+    function parseJwt(token) {
+        var base64Url = token.split('.')[1];
+        var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function (c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+
+        return JSON.parse(jsonPayload);
+    }
+
+    function refreshToken(user, pw) {
+        var token = "";
+        $.ajax({
+            url: 'https://matekasse.gero.dev/graphql',
+            //dataType: 'application/json',
+            method: 'POST',
+            contentType: 'application/json',
+            data: '{"query":"mutation { signIn(username: \\"' + user + '\\", password: \\"' + pw + '\\") }"}',
+            success: function ajaxSuccess(data) {
+                // data from the nginx
+                token = data.data.signIn;
+
+                // store my auth in a cookie
+            }, error: function ajaxFailed(jqXHR) {
+                // do something on failure, like
+                modal.style.display = "block";
+            }
+        });
+
+        return token;
+    }
+</script>
