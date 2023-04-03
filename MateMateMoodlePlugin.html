@@ -71,9 +71,21 @@
     // Try to load transaction table on page reload if token is there
     $(document).ready(function () {
         var auth_cookie = getCookie('mate_auth');
+        var user_cookie = getCookie('mate_user');
+        var pw_cookie = getCookie('mate_pw');
+
         if (auth_cookie === undefined) {
             // I have no cookie
-            // do nothing
+            // check for username and password
+            if (user_cookie !== undefined && pw_cookie !== undefined) {
+                signIn(false);
+                endCursor = getEndCursor(getCookie('mate_auth'));
+                getData(getCookie('mate_auth'));
+
+                tablediv.style.display = "block";
+            } else {
+                // do nothing
+            }
         } else {
             // validate auth token
             if (!isValid(auth_cookie)) {
@@ -90,9 +102,22 @@
     // When the user clicks on the button, open the modal
     btn.onclick = function () {
         var auth_cookie = getCookie('mate_auth');
+        var user_cookie = getCookie('mate_user');
+        var pw_cookie = getCookie('mate_pw');
+
         if (auth_cookie === undefined) {
             // I have no cookie
-            modal.style.display = "block";
+            // check for username and password
+            if (user_cookie !== undefined && pw_cookie !== undefined) {
+                signIn(false);
+                endCursor = getEndCursor(getCookie('mate_auth'));
+                getData(getCookie('mate_auth'));
+
+                tablediv.style.display = "block";
+            } else {
+                modal.style.display = "block";
+            }
+
         } else {
             // validate auth token
             if (!isValid(auth_cookie)) {
@@ -120,36 +145,69 @@
 
     // User clicked on Sign In Button
     mate_btn.onclick = function () {
+
+        signIn(true);
+
+        tablediv.style.display = "block";
+    }
+
+    function signIn(signInfromButton) {
         var expirationDate = new Date();
         expirationDate.setDate(expirationDate.getDate() + 30);
 
-        // Sign In
-        $.ajax({
-            url: 'https://matekasse.gero.dev/graphql',
-            method: 'POST',
-            contentType: 'application/json',
-            data: '{"query":"mutation { signIn(username: \\"' + mate_username.value + '\\", password: \\"' + mate_pw.value + '\\") }"}',
-            success: function ajaxSuccess(data) {
+        if (signInfromButton) {
+            $.ajax({
+                url: 'https://matekasse.gero.dev/graphql',
+                method: 'POST',
+                async: false,
+                contentType: 'application/json',
+                data: '{"query":"mutation { signIn(username: \\"' + mate_username.value + '\\", password: \\"' + mate_pw.value + '\\") }"}',
+                success: function ajaxSuccess(data) {
 
-                // Store values in cookies
-                if (data.data != null) {
-                    document.cookie = "mate_user=" + mate_username.value + "; expires=" + expirationDate.toUTCString();
-                    document.cookie = "mate_pw=" + mate_pw.value + "; expires=" + expirationDate.toUTCString();
-                    document.cookie = "mate_auth=" + data.data.signIn;
-                    endCursor = getEndCursor(data.data.signIn);
-                    getData(data.data.signIn);
-                    modal.style.display = "none";
-                    tablediv.style.display = "block";
-                } else {
-                    mate_username.value = "";
-                    mate_pw.value = "";
+                    // Store values in cookies
+                    if (data.data != null) {
+                        document.cookie = "mate_user=" + mate_username.value + "; expires=" + expirationDate.toUTCString();
+                        document.cookie = "mate_pw=" + mate_pw.value + "; expires=" + expirationDate.toUTCString();
+                        document.cookie = "mate_auth=" + data.data.signIn;
+
+                        modal.style.display = "none";
+                    } else {
+                        mate_username.value = "";
+                        mate_pw.value = "";
+                    }
+
+                }, error: function ajaxFailed(jqXHR) {
+                    // TODO: Some error handling
+                    modal.style.display = "block";
                 }
+            });
+        } else {
+            var user = getCookie('mate_user');
+            var pw = getCookie('mate_pw');
 
-            }, error: function ajaxFailed(jqXHR) {
-                // TODO: Some error handling
-                modal.style.display = "block";
-            }
-        });
+            $.ajax({
+                url: 'https://matekasse.gero.dev/graphql',
+                method: 'POST',
+                async: false,
+                contentType: 'application/json',
+                data: '{"query":"mutation { signIn(username: \\"' + user + '\\", password: \\"' + pw + '\\") }"}',
+                success: function ajaxSuccess(data) {
+
+                    // Store values in cookies
+                    if (data.data != null) {
+                        document.cookie = "mate_auth=" + data.data.signIn;
+                        tablediv.style.display = "block";
+                    } else {
+                        console.log('paniccc');
+                    }
+
+                }, error: function ajaxFailed(jqXHR) {
+                    // TODO: Some error handling
+                    modal.style.display = "block";
+                }
+            });
+        }
+
     }
 
     function getCookie(cookiename) {
