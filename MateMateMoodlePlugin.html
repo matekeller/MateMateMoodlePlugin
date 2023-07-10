@@ -62,14 +62,15 @@
     var mate_table = document.getElementById("matetable");
     var tablediv = document.getElementById("tablediv");
 
-    var transaction_offset = 0;
     var endCursor = 10000;
+    var currCursor = 10000;
 
     // Get the <span> element that closes the modal
     var span = document.getElementsByClassName("close")[0];
 
     // Try to load transaction table on page reload if token is there
     $(document).ready(function () {
+        console.log("ich lade jetzt")
         var auth_cookie = getCookie('mate_auth');
         var user_cookie = getCookie('mate_user');
         var pw_cookie = getCookie('mate_pw');
@@ -228,9 +229,10 @@
             async: false,
             contentType: 'application/json',
             headers: { "Authorization": auth },
-            data: '{"query":"query { transactionsPaginated(first: 0, after: 0) { pageInfo{ endCursor } } }"}',
+            // NOTE: Backend does weird things when quering with "first: 0", I suppose it replies with the total number of a users transactions
+            data: '{"query":"query { me { transactionsPaginated(first: 1, after: 10000) { pageInfo{ endCursor } } } }"}',
             success: function ajaxSuccess(data) {
-                cursor = data.data.transactionsPaginated.pageInfo.endCursor;
+                cursor = data.data.me.transactionsPaginated.pageInfo.endCursor + 1;
             }
         });
         return cursor;
@@ -238,7 +240,7 @@
 
     // Get Transaction Data
     function getData(auth_basic) {
-        var after = endCursor - transaction_offset + 1;
+        var after = currCursor == 10000 ? endCursor : currCursor;
         var transactions = [];
         var offerings = [];
         var tablePairs = [];
@@ -252,12 +254,12 @@
             headers: {
                 "Authorization": auth_basic
             },
-            data: '{"query":"query { transactionsPaginated(first: 10, after: ' + after + ') { edges { node { admin {username} offeringId payer { username } pricePaidCents timestamp deleted} } } }"}',
+            data: '{"query":"query { me { transactionsPaginated(first: 10, after: ' + after + ') { pageInfo { endCursor } edges { node { admin {username} offeringId payer { username } pricePaidCents timestamp deleted} } } } }"}',
             success: function ajaxSuccess(data) {
-                // store offset for future reference when we need to dynamically load next table elements
-                transaction_offset += 10;
+                transactions = data.data.me.transactionsPaginated.edges;
 
-                transactions = data.data.transactionsPaginated.edges;
+                // store offset for future reference when we need to dynamically load next table elements
+                currCursor = data.data.me.transactionsPaginated.pageInfo.endCursor;
             },
             error: function ajaxFailed(jqXHR) {
                 // TODO: Some error handling
