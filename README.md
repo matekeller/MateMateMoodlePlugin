@@ -1,5 +1,4 @@
-**Currently only working for admin users**
-# MateMateMoodlePlugin
+# MateMateMoodlePluginin
 Plugin to access your most recent purchases in the Mentoringkeller Mate DB.
 
 # Installation
