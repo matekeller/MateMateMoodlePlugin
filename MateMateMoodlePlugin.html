@@ -105,7 +105,7 @@
   // Insert Modal style
   document.body.insertAdjacentHTML(
     'afterbegin',
-    '<div id = "myModal" class = "modal"><div class = "modal-content" ><span class = "close" > × </span> <center><h2> Mate Login </h2></center> <form> <label for="mate_username"> username: </label><br> <input type="text" id="mate_username" name="mate_username"><br> <label for="mate_pw">password:</label><br> <input type="password" id="mate_pw" name="mate_pw"><br> </form>  <button class="btn btn-primary" id="mate_button">Log In</button></div></div>'
+    '<div id = "myModal" class = "modal"><div class = "modal-content" ><span class = "close" > × </span> <center><h2> Mate Login </h2></center> <form style="align-self: center; margin: 1rem;"> <label for="mate_username"> User Name: </label><br> <input type="text" id="mate_username" name="mate_username"><br> <label for="mate_pw">Password:</label><br> <input type="password" id="mate_pw" name="mate_pw"><br> </form>  <button class="btn btn-primary" id="mate_button">Log In</button></div></div>'
   )
 
   // Get all needed elements
@@ -437,6 +437,16 @@
     },
     {
       passive: true
+    }
+  )
+
+  // Event listener for password field
+  mate_pw.addEventListener(
+    'keypress', (event) => {
+      if (event.key === 'Enter') {
+        event.preventDefault()
+        mate_btn.click()
+      }
     }
   )
 
