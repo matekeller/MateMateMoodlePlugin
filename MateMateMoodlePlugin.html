@@ -1,6 +1,12 @@
 <!-- Layout -->
 <div
-  style="border: 2px solid RGB(255, 193, 7); border-radius: 15px; padding: 10px; width: 100%; overflow-x: clip;"
+  style="
+    border: 2px solid RGB(255, 193, 7);
+    border-radius: 15px;
+    padding: 10px;
+    width: 100%;
+    overflow-x: clip;
+  "
 >
   <div class="dropdown">
     <!-- Use Moodle's own dropdown menu style -->
@@ -56,22 +62,43 @@
     />
   </center>
 
-  <hr style="margin-bottom: 1px;">
+   <hr style="margin-bottom: 1px" />
 
-  <center>
-    <p style="color: grey; font-weight: bolder; font-family: Noto Sans;" id="mateUsernameHeading"></p>
-  </center>
+   <center>
+     <p
+       style="color: grey; font-weight: bolder; font-family: Noto Sans"
+       id="mateUsernameHeading"
+     ></p>
+   </center>
 
-  <div class="row">
-    <div class="col-sm-6"">
-      <p style="color: grey; font-weight: bolder; font-family: Noto Sans; font-style: italic;">Balance:</p>
-    </div>
-    <div class="col-sm-6"">
-      <p style="color: grey; font-weight: bolder; font-family: Noto Sans; text-align: right;" id="mateUserBalance"></p>
+   <div class="row">
+     <div class="col-sm-6">
+       <p
+         style="
+           color: grey;
+           font-weight: bolder;
+           font-family: Noto Sans;
+           font-style: italic;
+         "
+       >
+         Balance:
+       </p>
+     </div>
+     <div class="col-sm-6">
+       <p
+         style="
+           color: grey;
+           font-weight: bolder;
+           font-family: Noto Sans;
+           text-align: right;
+         "
+         id="mateUserBalance"
+       ></p>
     </div>
   </div>
 
-  <hr style="margin-top: 1px;">
+    <hr style="margin-top: 1px" />
+  </div>
 
   <!-- Transactions Table -->
   <div
@@ -104,7 +131,16 @@
   // Insert Modal style
   document.body.insertAdjacentHTML(
     'afterbegin',
-    '<div id = "myModal" class = "modal"><div class = "modal-content" ><span class = "close" > × </span> <center><h2> Mate Login </h2></center> <form style="align-self: center; margin: 1rem;"> <label for="mate_username"> User Name: </label><br> <input type="text" id="mate_username" name="mate_username"><br> <label for="mate_pw">Password:</label><br> <input type="password" id="mate_pw" name="mate_pw"><br> </form>  <button class="btn btn-primary" id="mate_button">Log In</button></div></div>'
+    '<div id = "myModal" class = "modal">' +
+      '<div class = "modal-content" >' +
+      '<span class = "close" > × </span>' +
+      '<center><h2> Mate Login </h2></center>' +
+      '<form style="align-self: center; margin: 1rem;">' +
+      '<label for="mate_username"> User Name: </label><br>' +
+      '<input type="text" id="mate_username" name="mate_username"><br>' +
+      '<label for="mate_pw">Password:</label><br>' +
+      '<input type="password" id="mate_pw" name="mate_pw"><br></form>' +
+      '<button class="btn btn-primary" id="mate_button">Log In</button></div></div>'
   )
 
   // Get all needed elements
@@ -141,7 +177,11 @@
         appendTable(getData(getCookie('mate_auth')))
 
         document.getElementById('mateUsernameHeading').innerHTML = user_cookie
-        isNaN(userBalance) ? document.getElementById('mateUserBalance').innerHTML = '' : document.getElementById('mateUserBalance').innerHTML = (-userBalance / 100).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })
+        isNaN(userBalance)
+          ? (document.getElementById('mateUserBalance').innerHTML = '')
+          : (document.getElementById('mateUserBalance').innerHTML = (
+              -userBalance / 100
+            ).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' }))
 
         tablediv.style.display = 'block'
       } else {
@@ -160,7 +200,11 @@
       const tr = getData(auth_cookie)
       allTransactions = getAll(auth_cookie)
       appendTable(tr)
-      isNaN(userBalance) ? document.getElementById('mateUserBalance').innerHTML = '' : document.getElementById('mateUserBalance').innerHTML = (-userBalance / 100).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })
+      isNaN(userBalance)
+        ? (document.getElementById('mateUserBalance').innerHTML = '')
+        : (document.getElementById('mateUserBalance').innerHTML = (
+            -userBalance / 100
+          ).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' }))
       tablediv.style.display = 'block'
     }
   })
@@ -181,7 +225,11 @@
         appendTable(getData(getCookie('mate_auth')))
 
         document.getElementById('mateUsernameHeading').innerHTML = user_cookie
-        isNaN(userBalance) ? document.getElementById('mateUserBalance').innerHTML = '' : document.getElementById('mateUserBalance').innerHTML = (-userBalance / 100).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })
+        isNaN(userBalance)
+          ? (document.getElementById('mateUserBalance').innerHTML = '')
+          : (document.getElementById('mateUserBalance').innerHTML = (
+              -userBalance / 100
+            ).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' }))
 
         tablediv.style.display = 'block'
       } else {
@@ -200,7 +248,11 @@
       endCursor = getEndCursor(auth_cookie)
       allTransactions = getAll(auth_cookie)
       appendTable(getData(auth_cookie))
-      isNaN(userBalance) ? document.getElementById('mateUserBalance').innerHTML = '' : document.getElementById('mateUserBalance').innerHTML = (-userBalance / 100).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })
+      isNaN(userBalance)
+        ? (document.getElementById('mateUserBalance').innerHTML = '')
+        : (document.getElementById('mateUserBalance').innerHTML = (
+            -userBalance / 100
+          ).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' }))
       tablediv.style.display = 'block'
     }
   }
@@ -440,14 +492,12 @@
   )
 
   // Event listener for password field
-  mate_pw.addEventListener(
-    'keypress', (event) => {
-      if (event.key === 'Enter') {
-        event.preventDefault()
-        mate_btn.click()
-      }
+  mate_pw.addEventListener('keypress', (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault()
+      mate_btn.click()
     }
-  )
+  })
 
   // Appends new transactions to table
   function appendTable (elements) {
@@ -476,25 +526,48 @@
       } else {
         // If the current timestamp's day differs from the last transactions' timestamp's day, make summary and new headline
         if (
-          timestamp.setHours(0, 0, 0, 0) !== lastTimestamp.setHours(0, 0, 0, 0) && (i === 0 ? (new Date(Date.parse(lastTransaction.timestamp)).setHours(0, 0, 0, 0) !== timestamp.setHours(0, 0, 0, 0)) : true)
+          timestamp.setHours(0, 0, 0, 0) !==
+            lastTimestamp.setHours(0, 0, 0, 0) &&
+          (i === 0
+            ? new Date(Date.parse(lastTransaction.timestamp)).setHours(0, 0, 0, 0) !== timestamp.setHours(0, 0, 0, 0)
+            : true)
         ) {
           let relTransactions
           if (i === 0) {
-            relTransactions = allTransactions.filter((el) => new Date(Date.parse(lastTransaction.timestamp)).setHours(0, 0, 0, 0) === new Date(Date.parse(el.timestamp)).setHours(0, 0, 0, 0) && !el.deleted && el.offeringId !== 'topup')
+            relTransactions = allTransactions.filter(
+              el =>
+                new Date(Date.parse(lastTransaction.timestamp)).setHours(0, 0, 0, 0
+                ) === new Date(Date.parse(el.timestamp)).setHours(0, 0, 0, 0) &&
+                !el.deleted &&
+                el.offeringId !== 'topup'
+            )
           } else {
-            relTransactions = allTransactions.filter((el) => lastTimestamp.setHours(0, 0, 0, 0) === new Date(Date.parse(el.timestamp)).setHours(0, 0, 0, 0) && !el.deleted && el.offeringId !== 'topup')
+            relTransactions = allTransactions.filter(
+              el =>
+                lastTimestamp.setHours(0, 0, 0, 0) ===
+                  new Date(Date.parse(el.timestamp)).setHours(0, 0, 0, 0) &&
+                !el.deleted &&
+                el.offeringId !== 'topup'
+            )
           }
-  
+
           let sum = 0
 
-          relTransactions.forEach((el) => {
+          relTransactions.forEach(el => {
             sum += el.pricePaidCents
           })
-  
+
           if (i !== 0) {
             const roww = matetable.insertRow(-1)
-            roww.insertCell(0).innerHTML = '<p style="color: grey; font-weight: bolder; font-style: italic; font-family: Noto Sans;">Total:</p>'
-            roww.insertCell(1).innerHTML = '<p style="color: grey; font-weight: bolder; font-family: Noto Sans; align: right;">' + (sum / 100).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' }) + '</p>'
+            roww.insertCell(0).innerHTML =
+              '<p style="color: grey; font-weight: bolder; font-style: italic; font-family: Noto Sans;">Total:</p>'
+            roww.insertCell(1).innerHTML =
+              '<p style="color: grey; font-weight: bolder; font-family: Noto Sans; align: right;">' +
+              (sum / 100).toLocaleString('de-DE', {
+                style: 'currency',
+                currency: 'EUR'
+              }) +
+              '</p>'
           }
 
           const sixdaysago = new Date()
@@ -518,7 +591,7 @@
           }
         }
       }
-  
+
       const row = matetable.insertRow(-1)
 
       // Alternating row color
