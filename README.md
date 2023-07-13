@@ -1,4 +1,4 @@
-# MateMateMoodlePluginin
+# MateMateMoodlePlugin
 Plugin to access your most recent purchases in the Mentoringkeller Mate DB.
 
 # Installation
