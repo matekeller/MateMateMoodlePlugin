@@ -506,7 +506,7 @@
 
   // Appends new transactions to table
   function appendTable (elements) {
-    const today = new Date('2023-07-12T03:24:00').setHours(0, 0, 0, 0)
+    const today = new Date().setHours(0, 0, 0, 0)
     const todayString = 'Today' // TODO: localize somehow
 
     for (let i = 0; i < elements.length; i++) {
