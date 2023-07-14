@@ -184,8 +184,9 @@
         document.getElementById('mateUsernameHeading').innerHTML = user_cookie
         isNaN(userBalance)
           ? (document.getElementById('mateUserBalance').innerHTML = '')
-          : (document.getElementById('mateUserBalance').innerHTML = (
-              -userBalance / 100
+          : (document.getElementById('mateUserBalance').innerHTML = (userBalance === 0
+              ? 0
+              : -userBalance / 100
             ).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' }))
 
         tablediv.style.display = 'block'
@@ -207,8 +208,9 @@
       appendTable(await getData(auth_cookie))
       isNaN(userBalance)
         ? (document.getElementById('mateUserBalance').innerHTML = '')
-        : (document.getElementById('mateUserBalance').innerHTML = (
-            -userBalance / 100
+        : (document.getElementById('mateUserBalance').innerHTML = (userBalance === 0
+            ? 0
+            : -userBalance / 100
           ).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' }))
       tablediv.style.display = 'block'
       mateheader.style.display = 'block'
@@ -233,8 +235,9 @@
         document.getElementById('mateUsernameHeading').innerHTML = user_cookie
         isNaN(userBalance)
           ? (document.getElementById('mateUserBalance').innerHTML = '')
-          : (document.getElementById('mateUserBalance').innerHTML = (
-              -userBalance / 100
+          : (document.getElementById('mateUserBalance').innerHTML = (userBalance === 0
+              ? 0
+              : -userBalance / 100
             ).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' }))
 
         tablediv.style.display = 'block'
@@ -257,8 +260,9 @@
       appendTable(await getData(auth_cookie))
       isNaN(userBalance)
         ? (document.getElementById('mateUserBalance').innerHTML = '')
-        : (document.getElementById('mateUserBalance').innerHTML = (
-            -userBalance / 100
+        : (document.getElementById('mateUserBalance').innerHTML = (userBalance === 0
+            ? 0
+            : -userBalance / 100
           ).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' }))
       tablediv.style.display = 'block'
       mateheader.style.display = 'block'
@@ -292,8 +296,9 @@
       document.getElementById('mateUsernameHeading').innerHTML = getCookie('mate_user')
       isNaN(userBalance)
         ? (document.getElementById('mateUserBalance').innerHTML = '')
-        : (document.getElementById('mateUserBalance').innerHTML = (
-            -userBalance / 100
+        : (document.getElementById('mateUserBalance').innerHTML = (userBalance === 0
+            ? 0
+            : -userBalance / 100
           ).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' }))
       tablediv.style.display = 'block'
       mateheader.style.display = 'block'
