@@ -311,7 +311,7 @@
 
     if (signInfromButton) {
       return $.ajax({
-        url: 'https://matekasse.gero.dev/graphql',
+        url: 'https://api.matekasse.de/graphql',
         method: 'POST',
         contentType: 'application/json',
         data:
@@ -369,7 +369,7 @@
       const pw = getCookie('mate_pw')
 
       return $.ajax({
-        url: 'https://matekasse.gero.dev/graphql',
+        url: 'https://api.matekasse.de/graphql',
         method: 'POST',
         contentType: 'application/json',
         data:
@@ -403,7 +403,7 @@
   // Gets the current end cursor of all transactions
   async function getEndCursor (auth) {
     return $.ajax({
-      url: 'https://matekasse.gero.dev/graphql',
+      url: 'https://api.matekasse.de/graphql',
       method: 'POST',
       contentType: 'application/json',
       headers: { Authorization: auth },
@@ -421,7 +421,7 @@
 
     // Get transactions
     transactions = await $.ajax({
-      url: 'https://matekasse.gero.dev/graphql',
+      url: 'https://api.matekasse.de/graphql',
       method: 'POST',
       contentType: 'application/json',
       headers: {
@@ -441,7 +441,7 @@
 
     // Get offerings
     offerings = await $.ajax({
-      url: 'https://matekasse.gero.dev/graphql',
+      url: 'https://api.matekasse.de/graphql',
       method: 'POST',
       contentType: 'application/json',
       headers: {
@@ -473,7 +473,7 @@
 
   async function getAll (auth_basic) {
     return $.ajax({
-      url: 'https://matekasse.gero.dev/graphql',
+      url: 'https://api.matekasse.de/graphql',
       method: 'POST',
       contentType: 'application/json',
       headers: {
@@ -658,7 +658,7 @@
   // If we have username & password, use it to refresh token
   async function refreshToken (user, pw) {
     return $.ajax({
-      url: 'https://matekasse.gero.dev/graphql',
+      url: 'https://api.matekasse.de/graphql',
       method: 'POST',
       contentType: 'application/json',
       data:
