@@ -11,12 +11,12 @@
   <div class="dropdown">
     <!-- Use Moodle's own dropdown menu style -->
     <a
-      href="#"
-      tabindex="0"
       class="dropdown-toggle icon-no-margin"
+      tabindex="0"
+      role="menuitem"
+      href="#"
       aria-label="Aktionsmenü"
       data-toggle="dropdown"
-      role="menuitem"
       aria-haspopup="true"
       aria-expanded="false"
       aria-controls="action-menu-0-menu"
@@ -28,19 +28,18 @@
         aria-label="Aktionsmenü"
       ></i>
     </a>
-
     <div
       class="dropdown-menu menu dropdown-menu-right"
+      style="will-change: transform"
+      role="menu"
       data-rel="menu-content"
       aria-labelledby="action-menu-toggle-0"
-      role="menu"
       data-constraint=".block-region"
-      style="will-change: transform"
     >
       <a
-        title="Log In MateDB"
-        class="dropdown-item editing_edit menu-action"
         id="Matebutton"
+        class="dropdown-item editing_edit menu-action"
+        title="Log In MateDB"
         href="#"
       >
         <i
@@ -53,26 +52,21 @@
       </a>
     </div>
   </div>
-
   <!-- MateMate Logo TODO: use proper CDN I guess-->
   <center>
     <img
-      src=" https://cdn.discordapp.com/attachments/623265449848602626/1088462164475523212/matemate.png"
+      src="https://raw.githubusercontent.com/matekeller/MateMate/refs/heads/master/assets/icon/icon.png?token=GHSAT0AAAAAACVJ5JD7ZIS7FXI6D6CHPTSYZ2XD36A"
       width="50%"
-      style="max-width: 150px"
     />
   </center>
-
   <div id="mateheader" style="display: none">
     <hr style="margin-bottom: 1px" />
-
     <center>
       <p
         style="color: grey; font-weight: bolder; font-family: Noto Sans"
         id="mateUsernameHeading"
       ></p>
     </center>
-
     <div class="row">
       <div class="col-sm-6">
         <p
@@ -98,575 +92,618 @@
         ></p>
       </div>
     </div>
-
     <hr style="margin-top: 1px" />
   </div>
-
   <!-- Transactions Table -->
   <div
     id="tablediv"
     style="display: none; height: 200px; width: 100%; overflow-y: scroll"
   >
-    <table id="matetable" style="width: 100%">
-      <tbody></tbody>
-    </table>
+    <table id="matetable" style="width: 100%"></table>
   </div>
 </div>
-
 <div id="modalscript"></div>
+<p>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+  <script>
+    // Insert Modal definition
+    const a = document.getElementById("modalscript");
+    const modal_style = document.createElement("style");
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    modal_style.innerHTML =
+      "@/* The Modal (background) */\n.modal {\n  display: none; /* Hidden by default */\n  position: fixed; /* Stay in place */\n  z-index: 1000000; /* Sit on top */\n  left: 0;\n  top: 0;\n  width: 100%; /* Full width */\n  height: 100%; /* Full height */\n  overflow: auto; /* Enable scroll if needed */\n  background-color: rgb(0,0,0); /* Fallback color */\n  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */\n}\n\n/* Modal Content/Box */\n.modal-content {\n  background-color: #fefefe;\n  margin: 15% auto; /* 15% from the top and centered */\n  padding: 20px;\n  border: 1px solid #888;\n  width: 30%; /* Could be more or less, depending on screen size */\n}\n\n/* The Close Button */\n.close {\n  color: #aaa;\n  float: right;\n  font-size: 28px;\n  font-weight: bold;\n}\n\n.close:hover,\n.close:focus {\n  color: black;\n  text-decoration: none;\n  cursor: pointer;\n} ";
 
-<script>
-  // Insert Modal definition
-  const a = document.getElementById('modalscript')
-  const modal_style = document.createElement('style')
+    a.appendChild(modal_style);
 
-  modal_style.innerHTML =
-    '@/* The Modal (background) */\n.modal {\n  display: none; /* Hidden by default */\n  position: fixed; /* Stay in place */\n  z-index: 1000000; /* Sit on top */\n  left: 0;\n  top: 0;\n  width: 100%; /* Full width */\n  height: 100%; /* Full height */\n  overflow: auto; /* Enable scroll if needed */\n  background-color: rgb(0,0,0); /* Fallback color */\n  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */\n}\n\n/* Modal Content/Box */\n.modal-content {\n  background-color: #fefefe;\n  margin: 15% auto; /* 15% from the top and centered */\n  padding: 20px;\n  border: 1px solid #888;\n  width: 30%; /* Could be more or less, depending on screen size */\n}\n\n/* The Close Button */\n.close {\n  color: #aaa;\n  float: right;\n  font-size: 28px;\n  font-weight: bold;\n}\n\n.close:hover,\n.close:focus {\n  color: black;\n  text-decoration: none;\n  cursor: pointer;\n} '
+    // Get the button that opens the Modal
+    const btn = document.getElementById("Matebutton");
 
-  a.appendChild(modal_style)
+    // Insert Modal style
+    document.body.insertAdjacentHTML(
+      "afterbegin",
+      '<div id = "myModal" class = "modal">' +
+        '<div class = "modal-content" >' +
+        '<span class = "close" > × </span>' +
+        "<center><h2> Mate Login </h2></center>" +
+        '<form style="align-self: center; margin: 1rem;">' +
+        '<label for="mate_username"> User Name: </label><br>' +
+        '<input type="text" id="mate_username" name="mate_username"><br>' +
+        '<label for="mate_pw">Password:</label><br>' +
+        '<input type="password" id="mate_pw" name="mate_pw"><br></form>' +
+        '<label id="mate_login_error" style="color: red; display: none;"></label>' +
+        '<button class="btn btn-primary" id="mate_button">Log In</button></div></div>'
+    );
 
-  // Get the button that opens the Modal
-  const btn = document.getElementById('Matebutton')
+    // Get all needed elements
+    const modal = document.getElementById("myModal");
+    const mate_username = document.getElementById("mate_username");
+    const mate_pw = document.getElementById("mate_pw");
+    const mate_btn = document.getElementById("mate_button");
+    const tablediv = document.getElementById("tablediv");
+    const mateheader = document.getElementById("mateheader");
+    const matetable = document.getElementById("matetable");
+    const loginErrorLabel = document.getElementById("mate_login_error");
 
-  // Insert Modal style
-  document.body.insertAdjacentHTML(
-    'afterbegin',
-    '<div id = "myModal" class = "modal">' +
-      '<div class = "modal-content" >' +
-      '<span class = "close" > × </span>' +
-      '<center><h2> Mate Login </h2></center>' +
-      '<form style="align-self: center; margin: 1rem;">' +
-      '<label for="mate_username"> User Name: </label><br>' +
-      '<input type="text" id="mate_username" name="mate_username"><br>' +
-      '<label for="mate_pw">Password:</label><br>' +
-      '<input type="password" id="mate_pw" name="mate_pw"><br></form>' +
-      '<label id="mate_login_error" style="color: red; display: none;"></label>' +
-      '<button class="btn btn-primary" id="mate_button">Log In</button></div></div>'
-  )
+    let endCursor = 1000000;
+    let currCursor = 1000000;
 
-  // Get all needed elements
-  const modal = document.getElementById('myModal')
-  const mate_username = document.getElementById('mate_username')
-  const mate_pw = document.getElementById('mate_pw')
-  const mate_btn = document.getElementById('mate_button')
-  const tablediv = document.getElementById('tablediv')
-  const mateheader = document.getElementById('mateheader')
-  const matetable = document.getElementById('matetable')
-  const loginErrorLabel = document.getElementById('mate_login_error')
+    let allTransactions = [];
+    let lastTransaction = {};
+    let userBalance = Number.NaN;
 
-  let endCursor = 10000
-  let currCursor = 10000
+    // Get the <span> element that closes the modal
+    const span = document.getElementsByClassName("close")[0];
 
-  let allTransactions = []
-  let lastTransaction = {}
-  let userBalance = Number.NaN
+    // Try to load transaction table on page reload if token is there
+    $(document).ready(async () => {
+      await start();
+      const mobileButton = document
+        .getElementsByClassName("drawer-right-toggle")[0]
+        .firstChild();
 
-  // Get the <span> element that closes the modal
-  const span = document.getElementsByClassName('close')[0]
-
-  // Try to load transaction table on page reload if token is there
-  $(document).ready(async () => {
-    const auth_cookie = getCookie('mate_auth')
-    const user_cookie = getCookie('mate_user')
-    const pw_cookie = getCookie('mate_pw')
-
-    if (auth_cookie === undefined) {
-      // I have no cookie
-      // check for username and password
-      if (user_cookie !== undefined && pw_cookie !== undefined) {
-        await signIn(false)
-        endCursor = await getEndCursor(getCookie('mate_auth'))
-        allTransactions = await getAll(getCookie('mate_auth'))
-        appendTable(await getData(getCookie('mate_auth')))
-
-        document.getElementById('mateUsernameHeading').innerHTML = user_cookie
-        isNaN(userBalance)
-          ? (document.getElementById('mateUserBalance').innerHTML = '')
-          : (document.getElementById('mateUserBalance').innerHTML = (userBalance === 0
-              ? 0
-              : -userBalance / 100
-            ).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' }))
-
-        tablediv.style.display = 'block'
-        mateheader.style.display = 'block'
-      } else {
-        // do nothing
+      /*
+      if (document.getElementsByClassName('drawer-right-toggle').length === 1) {
+        mobileButton.addEventListener('click', async () => {
+          await start(); console.log('handy')
+          mobileButton.click()
+        })
       }
-    } else {
-      // validate auth token
-      if (!isValid(auth_cookie)) {
-        document.cookie =
-          'mate_auth=' +
-          await refreshToken(getCookie('mate_user'), getCookie('mate_pw'))
-      }
+      */
+    });
 
-      document.getElementById('mateUsernameHeading').innerHTML = user_cookie
-      endCursor = await getEndCursor(auth_cookie)
-      allTransactions = await getAll(auth_cookie)
-      appendTable(await getData(auth_cookie))
-      isNaN(userBalance)
-        ? (document.getElementById('mateUserBalance').innerHTML = '')
-        : (document.getElementById('mateUserBalance').innerHTML = (userBalance === 0
-            ? 0
-            : -userBalance / 100
-          ).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' }))
-      tablediv.style.display = 'block'
-      mateheader.style.display = 'block'
-    }
-  })
+    async function start() {
+      const auth_cookie = getCookie("mate_auth");
+      const user_cookie = getCookie("mate_user");
+      const pw_cookie = getCookie("mate_pw");
 
-  // When the user clicks on the button, open the modal
-  btn.onclick = async () => {
-    const auth_cookie = getCookie('mate_auth')
-    const user_cookie = getCookie('mate_user')
-    const pw_cookie = getCookie('mate_pw')
+      if (auth_cookie === undefined) {
+        // I have no cookie
+        // check for username and password
+        if (user_cookie !== undefined && pw_cookie !== undefined) {
+          await signIn(false);
+          endCursor = await getEndCursor(getCookie("mate_auth"));
+          allTransactions = await getAll(getCookie("mate_auth"));
+          appendTable(await getData(getCookie("mate_auth")));
 
-    if (auth_cookie === undefined) {
-      // I have no cookie
-      // check for username and password
-      if (user_cookie !== undefined && pw_cookie !== undefined) {
-        await signIn(false)
-        endCursor = await getEndCursor(getCookie('mate_auth'))
-        allTransactions = await getAll(getCookie('mate_auth'))
-        appendTable(await getData(getCookie('mate_auth')))
+          document.getElementById("mateUsernameHeading").innerHTML =
+            user_cookie;
+          isNaN(userBalance)
+            ? (document.getElementById("mateUserBalance").innerHTML = "")
+            : (document.getElementById("mateUserBalance").innerHTML = (
+                -userBalance / 100
+              ).toLocaleString("de-DE", {
+                style: "currency",
+                currency: "EUR",
+              }));
 
-        document.getElementById('mateUsernameHeading').innerHTML = user_cookie
-        isNaN(userBalance)
-          ? (document.getElementById('mateUserBalance').innerHTML = '')
-          : (document.getElementById('mateUserBalance').innerHTML = (userBalance === 0
-              ? 0
-              : -userBalance / 100
-            ).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' }))
-
-        tablediv.style.display = 'block'
-        mateheader.style.display = 'block'
-      } else {
-        modal.style.display = 'block'
-      }
-    } else {
-      // validate auth token
-      if (!isValid(auth_cookie)) {
-        document.cookie =
-          'mate_auth=' +
-          await refreshToken(getCookie('mate_user'), getCookie('mate_pw'))
-      }
-
-      document.getElementById('mateUsernameHeading').innerHTML = user_cookie
-
-      endCursor = await getEndCursor(auth_cookie)
-      allTransactions = await getAll(auth_cookie)
-      appendTable(await getData(auth_cookie))
-      isNaN(userBalance)
-        ? (document.getElementById('mateUserBalance').innerHTML = '')
-        : (document.getElementById('mateUserBalance').innerHTML = (userBalance === 0
-            ? 0
-            : -userBalance / 100
-          ).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' }))
-      tablediv.style.display = 'block'
-      mateheader.style.display = 'block'
-    }
-  }
-
-  // When the user clicks on <span> (x), close the modal
-  span.onclick = function () {
-    modal.style.display = 'none'
-  }
-
-  // When the user clicks anywhere outside of the modal, close it
-  window.onclick = function (event) {
-    if (event.target === modal) {
-      modal.style.display = 'none'
-    }
-  }
-
-  // User clicked on Sign In Button
-  mate_btn.onclick = async () => {
-    loginErrorLabel.innerHTML = ''
-    loginErrorLabel.style.display = 'none'
-
-    await signIn(true)
-
-    if (loginErrorLabel.style.display === 'none') {
-      endCursor = await getEndCursor(getCookie('mate_auth'))
-      allTransactions = await getAll(getCookie('mate_auth'))
-      appendTable(await getData(getCookie('mate_auth')))
-
-      document.getElementById('mateUsernameHeading').innerHTML = getCookie('mate_user')
-      isNaN(userBalance)
-        ? (document.getElementById('mateUserBalance').innerHTML = '')
-        : (document.getElementById('mateUserBalance').innerHTML = (userBalance === 0
-            ? 0
-            : -userBalance / 100
-          ).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' }))
-      tablediv.style.display = 'block'
-      mateheader.style.display = 'block'
-    }
-  }
-
-  async function signIn (signInfromButton) {
-    const expirationDate = new Date()
-    expirationDate.setDate(expirationDate.getDate() + 30)
-
-    if (signInfromButton) {
-      return $.ajax({
-        url: 'https://api.matekasse.de/graphql',
-        method: 'POST',
-        contentType: 'application/json',
-        data:
-          '{"query":"mutation { signIn(username: \\"' +
-          mate_username.value +
-          '\\", password: \\"' +
-          mate_pw.value +
-          '\\") }"}'
-      }).then(response => {
-        // Store values in cookies
-        if (response.data != null) {
-          loginErrorLabel.innerHTML = ''
-          loginErrorLabel.style.display = 'none'
-          document.cookie =
-              'mate_user=' +
-              mate_username.value +
-              '; expires=' +
-              expirationDate.toUTCString()
-          document.cookie =
-              'mate_pw=' +
-              mate_pw.value +
-              '; expires=' +
-              expirationDate.toUTCString()
-          document.cookie = 'mate_auth=' + response.data.signIn
-
-          modal.style.display = 'none'
+          tablediv.style.display = "block";
+          mateheader.style.display = "block";
         } else {
-          mate_username.value = ''
-          mate_pw.value = ''
-          if (response.errors) {
-            switch (response.errors[0].message) {
-              case 'Invalid credentials':
-                loginErrorLabel.innerHTML =
-                    'Password wrong. Please verify and try again.'
-                loginErrorLabel.style.display = 'block'
-                break
+          // do nothing
+        }
+      } else {
+        // validate auth token
+        if (!isValid(auth_cookie)) {
+          document.cookie =
+            "mate_auth=" +
+            (await refreshToken(getCookie("mate_user"), getCookie("mate_pw")));
+        }
 
-              case 'no rows returned by a query that expected to return at least one row':
-                loginErrorLabel.innerHTML =
-                    'Username does not exist. Please verify and try again.'
-                loginErrorLabel.style.display = 'block'
-                break
+        document.getElementById("mateUsernameHeading").innerHTML = user_cookie;
+        endCursor = await getEndCursor(auth_cookie);
+        allTransactions = await getAll(auth_cookie);
+        appendTable(await getData(auth_cookie));
+        isNaN(userBalance)
+          ? (document.getElementById("mateUserBalance").innerHTML = "")
+          : (document.getElementById("mateUserBalance").innerHTML = (
+              -userBalance / 100
+            ).toLocaleString("de-DE", {
+              style: "currency",
+              currency: "EUR",
+            }));
+        tablediv.style.display = "block";
+        mateheader.style.display = "block";
+      }
+    }
 
-              default:
-                loginErrorLabel.innerHTML =
-                    'There was an error while logging in. Please try again.'
-                loginErrorLabel.style.display = 'block'
-                break
+    // When the user clicks on the button, open the modal
+    btn.onclick = async () => {
+      const auth_cookie = getCookie("mate_auth");
+      const user_cookie = getCookie("mate_user");
+      const pw_cookie = getCookie("mate_pw");
+
+      if (auth_cookie === undefined) {
+        // I have no cookie
+        // check for username and password
+        if (user_cookie !== undefined && pw_cookie !== undefined) {
+          await signIn(false);
+          endCursor = await getEndCursor(getCookie("mate_auth"));
+          allTransactions = await getAll(getCookie("mate_auth"));
+          appendTable(await getData(getCookie("mate_auth")));
+
+          document.getElementById("mateUsernameHeading").innerHTML =
+            user_cookie;
+          isNaN(userBalance)
+            ? (document.getElementById("mateUserBalance").innerHTML = "")
+            : (document.getElementById("mateUserBalance").innerHTML = (
+                -userBalance / 100
+              ).toLocaleString("de-DE", {
+                style: "currency",
+                currency: "EUR",
+              }));
+
+          tablediv.style.display = "block";
+          mateheader.style.display = "block";
+        } else {
+          modal.style.display = "block";
+        }
+      } else {
+        // validate auth token
+        if (!isValid(auth_cookie)) {
+          document.cookie =
+            "mate_auth=" +
+            (await refreshToken(getCookie("mate_user"), getCookie("mate_pw")));
+        }
+
+        document.getElementById("mateUsernameHeading").innerHTML = user_cookie;
+
+        endCursor = await getEndCursor(auth_cookie);
+        allTransactions = await getAll(auth_cookie);
+        appendTable(await getData(auth_cookie));
+        isNaN(userBalance)
+          ? (document.getElementById("mateUserBalance").innerHTML = "")
+          : (document.getElementById("mateUserBalance").innerHTML = (
+              -userBalance / 100
+            ).toLocaleString("de-DE", {
+              style: "currency",
+              currency: "EUR",
+            }));
+        tablediv.style.display = "block";
+        mateheader.style.display = "block";
+      }
+    };
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function () {
+      modal.style.display = "none";
+    };
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+      if (event.target === modal) {
+        modal.style.display = "none";
+      }
+    };
+
+    // User clicked on Sign In Button
+    mate_btn.onclick = async () => {
+      loginErrorLabel.innerHTML = "";
+      loginErrorLabel.style.display = "none";
+
+      await signIn(true);
+
+      if (loginErrorLabel.style.display === "none") {
+        endCursor = await getEndCursor(getCookie("mate_auth"));
+        allTransactions = await getAll(getCookie("mate_auth"));
+        appendTable(await getData(getCookie("mate_auth")));
+
+        document.getElementById("mateUsernameHeading").innerHTML =
+          getCookie("mate_user");
+        isNaN(userBalance)
+          ? (document.getElementById("mateUserBalance").innerHTML = "")
+          : (document.getElementById("mateUserBalance").innerHTML = (
+              -userBalance / 100
+            ).toLocaleString("de-DE", {
+              style: "currency",
+              currency: "EUR",
+            }));
+        tablediv.style.display = "block";
+        mateheader.style.display = "block";
+      }
+    };
+
+    async function signIn(signInfromButton) {
+      const expirationDate = new Date();
+      expirationDate.setDate(expirationDate.getDate() + 30);
+
+      if (signInfromButton) {
+        return $.ajax({
+          url: "https://api.matekasse.de/graphql",
+          method: "POST",
+          contentType: "application/json",
+          data:
+            '{"query":"mutation { signIn(username: \\"' +
+            mate_username.value +
+            '\\", password: \\"' +
+            mate_pw.value +
+            '\\") }"}',
+        }).then((response) => {
+          // Store values in cookies
+          if (response.data != null) {
+            loginErrorLabel.innerHTML = "";
+            loginErrorLabel.style.display = "none";
+            document.cookie =
+              "mate_user=" +
+              mate_username.value +
+              "; expires=" +
+              expirationDate.toUTCString();
+            document.cookie =
+              "mate_pw=" +
+              mate_pw.value +
+              "; expires=" +
+              expirationDate.toUTCString();
+            document.cookie = "mate_auth=" + response.data.signIn;
+
+            modal.style.display = "none";
+          } else {
+            mate_username.value = "";
+            mate_pw.value = "";
+            if (response.errors) {
+              switch (response.errors[0].message) {
+                case "Invalid credentials":
+                  loginErrorLabel.innerHTML =
+                    "Password wrong. Please verify and try again.";
+                  loginErrorLabel.style.display = "block";
+                  break;
+
+                case "no rows returned by a query that expected to return at least one row":
+                  loginErrorLabel.innerHTML =
+                    "Username does not exist. Please verify and try again.";
+                  loginErrorLabel.style.display = "block";
+                  break;
+
+                default:
+                  loginErrorLabel.innerHTML =
+                    "There was an error while logging in. Please try again.";
+                  loginErrorLabel.style.display = "block";
+                  break;
+              }
+            }
+          }
+        });
+      } else {
+        const user = getCookie("mate_user");
+        const pw = getCookie("mate_pw");
+
+        return $.ajax({
+          url: "https://api.matekasse.de/graphql",
+          method: "POST",
+          contentType: "application/json",
+          data:
+            '{"query":"mutation { signIn(username: \\"' +
+            user +
+            '\\", password: \\"' +
+            pw +
+            '\\") }"}',
+        }).then((response) => {
+          // Store values in cookies
+          if (response.data != null) {
+            document.cookie = "mate_auth=" + response.data.signIn;
+            tablediv.style.display = "block";
+            mateheader.style.display = "block";
+          } else {
+            console.log("paniccc");
+          }
+        });
+      }
+    }
+
+    function getCookie(cookiename) {
+      /* a function to find a cookie based on its name */
+
+      const r = document.cookie.match("\\b" + cookiename + "=([^;]*)\\b");
+      // document.cookie returns all cookies for this url
+      return r ? r[1] : undefined;
+      // return the regex capture if it has content, otherwise return undefined
+    }
+
+    // Gets the current end cursor of all transactions
+    async function getEndCursor(auth) {
+      return $.ajax({
+        url: "https://api.matekasse.de/graphql",
+        method: "POST",
+        contentType: "application/json",
+        headers: {
+          Authorization: auth,
+        },
+        // NOTE: Backend does weird things when quering with "first: 0", I suppose it replies with the total number of a users transactions
+        data: '{"query":"query { me { transactionsPaginated(first: 1, after: 1000000) { pageInfo{ endCursor } } } }"}',
+      }).then((response) =>
+        response.data != null
+          ? response.data.me.transactionsPaginated.pageInfo.endCursor + 1
+          : 0
+      );
+    }
+
+    // Get Transaction Data
+    async function getData(auth_basic) {
+      const after = currCursor === 1000000 ? endCursor : currCursor;
+      let transactions = [];
+      let offerings = [];
+      const tablePairs = [];
+
+      // Get transactions
+      transactions = await $.ajax({
+        url: "https://api.matekasse.de/graphql",
+        method: "POST",
+        contentType: "application/json",
+        headers: {
+          Authorization: auth_basic,
+        },
+        data:
+          '{"query":"query { me { balance transactionsPaginated(first: 10, after: ' +
+          after +
+          ') { pageInfo { endCursor } edges { node { admin {username} offeringId payer { username } pricePaidCents timestamp deleted} } } } }"}',
+      }).then((response) => {
+        userBalance = response.data.me.balance;
+
+        // store offset for future reference when we need to dynamically load next table elements
+        currCursor = response.data.me.transactionsPaginated.pageInfo.endCursor;
+        return response.data.me.transactionsPaginated.edges;
+      });
+
+      // Get offerings
+      offerings = await $.ajax({
+        url: "https://api.matekasse.de/graphql",
+        method: "POST",
+        contentType: "application/json",
+        headers: {
+          Authorization: auth_basic,
+        },
+        data: '{"query":"query { offerings { name readableName imageUrl } }"}',
+      }).then((response) => response.data.offerings);
+
+      // Assign imageUrls and readable names to transactions
+      for (let i = 0; i < transactions.length; i++) {
+        for (let j = 0; j < offerings.length; j++) {
+          const element = {};
+          if (
+            !transactions[i].node.deleted &&
+            offerings[j].name === transactions[i].node.offeringId
+          ) {
+            element.readableName = offerings[j].readableName;
+            element.imageUrl = offerings[j].imageUrl;
+            element.pricePaidCents = transactions[i].node.pricePaidCents;
+            element.timestamp = transactions[i].node.timestamp;
+
+            tablePairs.push(element);
+            break;
+          }
+        }
+      }
+      return tablePairs;
+    }
+
+    async function getAll(auth_basic) {
+      return $.ajax({
+        url: "https://api.matekasse.de/graphql",
+        method: "POST",
+        contentType: "application/json",
+        headers: {
+          Authorization: auth_basic,
+        },
+        data: '{"query":"query { me { transactionsPaginated(first: 1000000, after: 1000000) { pageInfo { endCursor } edges { node { admin {username} offeringId payer { username } pricePaidCents timestamp deleted} } } } }"}',
+      }).then((response) =>
+        response.data.me.transactionsPaginated.edges.map((el) => el.node)
+      );
+    }
+
+    // Event listener for dynamic table loading
+    tablediv.addEventListener(
+      "scroll",
+      async () => {
+        if (
+          Math.abs(
+            tablediv.scrollHeight - tablediv.clientHeight - tablediv.scrollTop
+          ) < 1
+        ) {
+          appendTable(await getData(getCookie("mate_auth")));
+        }
+      },
+      {
+        passive: true,
+      }
+    );
+
+    // Event listener for password field
+    mate_pw.addEventListener("keypress", async (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        await mate_btn.click();
+      }
+    });
+
+    // Appends new transactions to table
+    function appendTable(elements) {
+      const today = new Date().setHours(0, 0, 0, 0);
+      const todayString = "Today"; // TODO: localize somehow
+
+      for (let i = 0; i < elements.length; i++) {
+        const timestamp = new Date(Date.parse(elements[i].timestamp));
+        let lastTimestamp = new Date("1995-12-17T03:24:00");
+
+        // Store timestamp of previous transaction element
+        if (i !== 0) {
+          lastTimestamp = new Date(Date.parse(elements[i - 1].timestamp));
+        }
+
+        if (i === elements.length - 1) {
+          lastTransaction = elements[i];
+        }
+
+        // If the most recent transaction was today, insert "Today" headline
+        if (i === 0 && timestamp.setHours(0, 0, 0, 0) === today) {
+          matetable.insertRow(-1).insertCell(0).innerHTML =
+            '<p style="color: grey; font-weight: bolder; font-family: Noto Sans;">' +
+            todayString +
+            "</p>";
+        } else {
+          // If the current timestamp's day differs from the last transactions' timestamp's day, make summary and new headline
+          if (
+            timestamp.setHours(0, 0, 0, 0) !==
+              lastTimestamp.setHours(0, 0, 0, 0) &&
+            (i === 0
+              ? new Date(Date.parse(lastTransaction.timestamp)).setHours(
+                  0,
+                  0,
+                  0,
+                  0
+                ) !== timestamp.setHours(0, 0, 0, 0)
+              : true)
+          ) {
+            let relTransactions;
+            if (i === 0) {
+              relTransactions = allTransactions.filter(
+                (el) =>
+                  new Date(Date.parse(lastTransaction.timestamp)).setHours(
+                    0,
+                    0,
+                    0,
+                    0
+                  ) ===
+                    new Date(Date.parse(el.timestamp)).setHours(0, 0, 0, 0) &&
+                  !el.deleted &&
+                  el.offeringId !== "topup"
+              );
+            } else {
+              relTransactions = allTransactions.filter(
+                (el) =>
+                  lastTimestamp.setHours(0, 0, 0, 0) ===
+                    new Date(Date.parse(el.timestamp)).setHours(0, 0, 0, 0) &&
+                  !el.deleted &&
+                  el.offeringId !== "topup"
+              );
+            }
+
+            let sum = 0;
+
+            relTransactions.forEach((el) => {
+              sum += el.pricePaidCents;
+            });
+
+            if (i !== 0) {
+              const roww = matetable.insertRow(-1);
+              roww.insertCell(0).innerHTML =
+                '<p style="color: grey; font-weight: bolder; font-style: italic; font-family: Noto Sans;">Total:</p>';
+              roww.insertCell(1).innerHTML =
+                '<p style="color: grey; font-weight: bolder; font-family: Noto Sans; align: right;">' +
+                (sum / 100).toLocaleString("de-DE", {
+                  style: "currency",
+                  currency: "EUR",
+                }) +
+                "</p>";
+            }
+
+            const sixdaysago = new Date();
+            sixdaysago.setDate(sixdaysago.getDate() - 6);
+
+            // Use weekday names as headlines for the past 6 days
+            if (
+              timestamp.setHours(0, 0, 0, 0) > sixdaysago.setHours(0, 0, 0, 0)
+            ) {
+              matetable.insertRow(-1).insertCell(0).innerHTML =
+                '<p style="color: grey; font-weight: bolder; font-family: Noto Sans;">' +
+                timestamp.toLocaleString(window.navigator.language, {
+                  weekday: "long",
+                }) +
+                "</p>";
+            } else {
+              matetable.insertRow(-1).insertCell(0).innerHTML =
+                '<p style="color: grey; font-weight: bolder; font-family: Noto Sans;">' +
+                timestamp.toLocaleDateString() +
+                "</p>";
             }
           }
         }
-      })
-    } else {
-      const user = getCookie('mate_user')
-      const pw = getCookie('mate_pw')
 
+        const row = matetable.insertRow(-1);
+
+        // Alternating row color
+        if (i % 2 === 0) {
+          row.style = "background-color:  #f2f2f2; ";
+        }
+
+        // Insert transaction row
+        const cell = row.insertCell(0);
+        cell.innerHTML =
+          '<img src="' +
+          elements[i].imageUrl +
+          '" width="50px" title="' +
+          elements[i].readableName +
+          '">';
+        cell.style = "padding: 5px; ";
+        row.insertCell(1).innerHTML = (
+          elements[i].pricePaidCents / 100
+        ).toLocaleString("de-DE", {
+          style: "currency",
+          currency: "EUR",
+        });
+      }
+    }
+
+    // Check validity of JWT token
+    function isValid(token) {
+      try {
+        const { exp } = parseJwt(token).exp;
+        if (Date.now() >= exp * 1000) {
+          return false;
+        }
+      } catch (err) {
+        return false;
+      }
+      return true;
+    }
+
+    // Parse JWT token
+    function parseJwt(token) {
+      const base64Url = token.split(".")[1];
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+      const jsonPayload = decodeURIComponent(
+        window
+          .atob(base64)
+          .split("")
+          .map(function (c) {
+            return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+          })
+          .join("")
+      );
+
+      return JSON.parse(jsonPayload);
+    }
+
+    // If we have username & password, use it to refresh token
+    async function refreshToken(user, pw) {
       return $.ajax({
-        url: 'https://api.matekasse.de/graphql',
-        method: 'POST',
-        contentType: 'application/json',
+        url: "https://api.matekasse.de/graphql",
+        method: "POST",
+        contentType: "application/json",
         data:
           '{"query":"mutation { signIn(username: \\"' +
           user +
           '\\", password: \\"' +
           pw +
-          '\\") }"}'
-      }).then(response => {
-        // Store values in cookies
-        if (response.data != null) {
-          document.cookie = 'mate_auth=' + response.data.signIn
-          tablediv.style.display = 'block'
-          mateheader.style.display = 'block'
-        } else {
-          console.log('paniccc')
-        }
-      })
+          '\\") }"}',
+      }).then((response) => response.data.signIn);
     }
-  }
-
-  function getCookie (cookiename) {
-    /* a function to find a cookie based on its name */
-
-    const r = document.cookie.match('\\b' + cookiename + '=([^;]*)\\b')
-    // document.cookie returns all cookies for this url
-    return r ? r[1] : undefined
-    // return the regex capture if it has content, otherwise return undefined
-  }
-
-  // Gets the current end cursor of all transactions
-  async function getEndCursor (auth) {
-    return $.ajax({
-      url: 'https://api.matekasse.de/graphql',
-      method: 'POST',
-      contentType: 'application/json',
-      headers: { Authorization: auth },
-      // NOTE: Backend does weird things when quering with "first: 0", I suppose it replies with the total number of a users transactions
-      data: '{"query":"query { me { transactionsPaginated(first: 1, after: 10000) { pageInfo{ endCursor } } } }"}'
-    }).then(response => response.data != null ? response.data.me.transactionsPaginated.pageInfo.endCursor + 1 : 0)
-  }
-
-  // Get Transaction Data
-  async function getData (auth_basic) {
-    const after = currCursor === 10000 ? endCursor : currCursor
-    let transactions = []
-    let offerings = []
-    const tablePairs = []
-
-    // Get transactions
-    transactions = await $.ajax({
-      url: 'https://api.matekasse.de/graphql',
-      method: 'POST',
-      contentType: 'application/json',
-      headers: {
-        Authorization: auth_basic
-      },
-      data:
-        '{"query":"query { me { balance transactionsPaginated(first: 10, after: ' +
-        after +
-        ') { pageInfo { endCursor } edges { node { admin {username} offeringId payer { username } pricePaidCents timestamp deleted} } } } }"}'
-    }).then(response => {
-      userBalance = response.data.me.balance
-
-      // store offset for future reference when we need to dynamically load next table elements
-      currCursor = response.data.me.transactionsPaginated.pageInfo.endCursor
-      return response.data.me.transactionsPaginated.edges
-    })
-
-    // Get offerings
-    offerings = await $.ajax({
-      url: 'https://api.matekasse.de/graphql',
-      method: 'POST',
-      contentType: 'application/json',
-      headers: {
-        Authorization: auth_basic
-      },
-      data: '{"query":"query { offerings { name readableName imageUrl } }"}'
-    }).then(response => response.data.offerings)
-
-    // Assign imageUrls and readable names to transactions
-    for (let i = 0; i < transactions.length; i++) {
-      for (let j = 0; j < offerings.length; j++) {
-        const element = {}
-        if (
-          !transactions[i].node.deleted &&
-          offerings[j].name === transactions[i].node.offeringId
-        ) {
-          element.readableName = offerings[j].readableName
-          element.imageUrl = offerings[j].imageUrl
-          element.pricePaidCents = transactions[i].node.pricePaidCents
-          element.timestamp = transactions[i].node.timestamp
-
-          tablePairs.push(element)
-          break
-        }
-      }
-    }
-    return tablePairs
-  }
-
-  async function getAll (auth_basic) {
-    return $.ajax({
-      url: 'https://api.matekasse.de/graphql',
-      method: 'POST',
-      contentType: 'application/json',
-      headers: {
-        Authorization: auth_basic
-      },
-      data: '{"query":"query { me { transactionsPaginated(first: 10000, after: 10000) { pageInfo { endCursor } edges { node { admin {username} offeringId payer { username } pricePaidCents timestamp deleted} } } } }"}'
-    }).then(response => response.data.me.transactionsPaginated.edges.map(
-      el => el.node
-    ))
-  }
-
-  // Event listener for dynamic table loading
-  tablediv.addEventListener(
-    'scroll',
-    async () => {
-      if (
-        Math.abs(
-          tablediv.scrollHeight - tablediv.clientHeight - tablediv.scrollTop
-        ) < 1
-      ) {
-        appendTable(await getData(getCookie('mate_auth')))
-      }
-    },
-    {
-      passive: true
-    }
-  )
-
-  // Event listener for password field
-  mate_pw.addEventListener('keypress', async (event) => {
-    if (event.key === 'Enter') {
-      event.preventDefault()
-      await mate_btn.click()
-    }
-  })
-
-  // Appends new transactions to table
-  function appendTable (elements) {
-    const today = new Date().setHours(0, 0, 0, 0)
-    const todayString = 'Today' // TODO: localize somehow
-
-    for (let i = 0; i < elements.length; i++) {
-      const timestamp = new Date(Date.parse(elements[i].timestamp))
-      let lastTimestamp = new Date('1995-12-17T03:24:00')
-
-      // Store timestamp of previous transaction element
-      if (i !== 0) {
-        lastTimestamp = new Date(Date.parse(elements[i - 1].timestamp))
-      }
-
-      if (i === elements.length - 1) {
-        lastTransaction = elements[i]
-      }
-
-      // If the most recent transaction was today, insert "Today" headline
-      if (i === 0 && timestamp.setHours(0, 0, 0, 0) === today) {
-        matetable.insertRow(-1).insertCell(0).innerHTML =
-          '<p style="color: grey; font-weight: bolder; font-family: Noto Sans;">' +
-          todayString +
-          '</p>'
-      } else {
-        // If the current timestamp's day differs from the last transactions' timestamp's day, make summary and new headline
-        if (
-          timestamp.setHours(0, 0, 0, 0) !==
-            lastTimestamp.setHours(0, 0, 0, 0) &&
-          (i === 0
-            ? new Date(Date.parse(lastTransaction.timestamp)).setHours(0, 0, 0, 0) !== timestamp.setHours(0, 0, 0, 0)
-            : true)
-        ) {
-          let relTransactions
-          if (i === 0) {
-            relTransactions = allTransactions.filter(
-              el =>
-                new Date(Date.parse(lastTransaction.timestamp)).setHours(0, 0, 0, 0
-                ) === new Date(Date.parse(el.timestamp)).setHours(0, 0, 0, 0) &&
-                !el.deleted &&
-                el.offeringId !== 'topup'
-            )
-          } else {
-            relTransactions = allTransactions.filter(
-              el =>
-                lastTimestamp.setHours(0, 0, 0, 0) ===
-                  new Date(Date.parse(el.timestamp)).setHours(0, 0, 0, 0) &&
-                !el.deleted &&
-                el.offeringId !== 'topup'
-            )
-          }
-
-          let sum = 0
-
-          relTransactions.forEach(el => {
-            sum += el.pricePaidCents
-          })
-
-          if (i !== 0) {
-            const roww = matetable.insertRow(-1)
-            roww.insertCell(0).innerHTML =
-              '<p style="color: grey; font-weight: bolder; font-style: italic; font-family: Noto Sans;">Total:</p>'
-            roww.insertCell(1).innerHTML =
-              '<p style="color: grey; font-weight: bolder; font-family: Noto Sans; align: right;">' +
-              (sum / 100).toLocaleString('de-DE', {
-                style: 'currency',
-                currency: 'EUR'
-              }) +
-              '</p>'
-          }
-
-          const sixdaysago = new Date()
-          sixdaysago.setDate(sixdaysago.getDate() - 6)
-
-          // Use weekday names as headlines for the past 6 days
-          if (
-            timestamp.setHours(0, 0, 0, 0) > sixdaysago.setHours(0, 0, 0, 0)
-          ) {
-            matetable.insertRow(-1).insertCell(0).innerHTML =
-              '<p style="color: grey; font-weight: bolder; font-family: Noto Sans;">' +
-              timestamp.toLocaleString(window.navigator.language, {
-                weekday: 'long'
-              }) +
-              '</p>'
-          } else {
-            matetable.insertRow(-1).insertCell(0).innerHTML =
-              '<p style="color: grey; font-weight: bolder; font-family: Noto Sans;">' +
-              timestamp.toLocaleDateString() +
-              '</p>'
-          }
-        }
-      }
-
-      const row = matetable.insertRow(-1)
-
-      // Alternating row color
-      if (i % 2 === 0) {
-        row.style = 'background-color:  #f2f2f2; '
-      }
-
-      // Insert transaction row
-      const cell = row.insertCell(0)
-      cell.innerHTML =
-        '<img src="' +
-        elements[i].imageUrl +
-        '" width="50px" title="' +
-        elements[i].readableName +
-        '">'
-      cell.style = 'padding: 5px; '
-      row.insertCell(1).innerHTML = (
-        elements[i].pricePaidCents / 100
-      ).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })
-    }
-  }
-
-  // Check validity of JWT token
-  function isValid (token) {
-    try {
-      const { exp } = parseJwt(token).exp
-      if (Date.now() >= exp * 1000) {
-        return false
-      }
-    } catch (err) {
-      return false
-    }
-    return true
-  }
-
-  // Parse JWT token
-  function parseJwt (token) {
-    const base64Url = token.split('.')[1]
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
-    const jsonPayload = decodeURIComponent(
-      window
-        .atob(base64)
-        .split('')
-        .map(function (c) {
-          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
-        })
-        .join('')
-    )
-
-    return JSON.parse(jsonPayload)
-  }
-
-  // If we have username & password, use it to refresh token
-  async function refreshToken (user, pw) {
-    return $.ajax({
-      url: 'https://api.matekasse.de/graphql',
-      method: 'POST',
-      contentType: 'application/json',
-      data:
-        '{"query":"mutation { signIn(username: \\"' +
-        user +
-        '\\", password: \\"' +
-        pw +
-        '\\") }"}'
-    }).then(response => response.data.signIn)
-  }
-</script>
+  </script>
+</p>
